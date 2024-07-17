@@ -1,14 +1,18 @@
-# Comfra
+# et
 
-Comfra is an Infrastructure as Code tool created by Platform Engineers at No_Ops. 
+<div style="text-align:center">
+    <img src="images/logo.png" alt="logo" style="width:150px;"/>
+</div>
 
-We bring composition to infrastructure, the community has built a set of Blueprints which can be composed together to build a stack. 
+Environment Toolkit (`et`) is an Infrastructure as Code tool created by Platform Engineers at No_Ops.
+
+We bring composition to infrastructure, the community has built a set of Blueprints which can be composed together to build a stack.
 
 ## Architecture Terms
 
-1. Comfra - the cli 
-2. Blueprints - CDK-TF modules created by the community and registered in the Comfra registry
-3. Stack - a set of Blueprints composed together using Comfra
+1. `et` - the cli
+2. Blueprints - CDK-TF modules created by the community and registered in the Environment Toolkit registry
+3. Stack - a set of Blueprints composed together using Environment Tookit
 4. Classes - a term we took from CMDB, which helps validate a list of Blueprints
 5. Resources - a Blueprint + Data = a resource
 6. Primary Resources - Every class has a set of resources that are primary and atleast one of those primary services needs to be defined
@@ -16,18 +20,18 @@ We bring composition to infrastructure, the community has built a set of Bluepri
 
 ## Start with an example
 
-Below is an comfra.yaml file, we'll be using this example to explain how everything works.
+Below is an et.yml file, we'll be using this example to explain how everything works.
 
 ```
 class: compute
 code: outfra
 
-data: 
+data:
   aws:
-    role: arn:aws:iam::211125614781:role/Comfra-Deployment
+    role: arn:aws:iam::211125614781:role/et-deployment
     state:
-        bucket: comfra-example-prod
-        role: arn:aws:iam::211125614781:role/Comfra-Bucket
+        bucket: et-example-prod
+        role: arn:aws:iam::211125614781:role/et-bucket
   environment: prod
   region: us-east1
 
