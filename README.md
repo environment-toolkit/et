@@ -11,12 +11,14 @@ We bring composition to infrastructure, the community has built a set of Bluepri
 ## Architecture Terms
 
 1. `et` - the cli
-2. Blueprints - CDK-TF modules created by the community and registered in the Environment Toolkit registry
-3. Stack - a set of Blueprints composed together using Environment Tookit
-4. Classes - a term we took from CMDB, which helps validate a list of Blueprints
-5. Resources - a Blueprint + Data = a resource
-6. Primary Resources - Every class has a set of resources that are primary and atleast one of those primary services needs to be defined
-7. Secondary Resources - Every class has a set of resrouces that are secondary, these are resources that support the primary service and are optional
+2. Blueprint - CDK-TF modules created by the community and registered in the Environment Toolkit registry
+3. Spec - the spec file which contains a class, code, data and a list of resources
+4. Stack - the output of running a spec with Environment Toolkit
+5. Class - a term we took from CMDB, which helps validate a list of Blueprints
+6. Resource - a Blueprint + Data = a resource
+7. Primary Resource - Every class has a set of resources that are primary and atleast one of those primary services needs to be defined
+8. Secondary Resource - Every class has a set of resrouces that are secondary, these are resources that support the primary service and are optional
+9. Reference - A reference will connect a resource to an external stack
 
 ## Start with an example
 
@@ -89,11 +91,7 @@ resources:
         - environment: prod
           data:
             env_vars:
-              AWS_ACCOUNTID: "211125614781"
               UGLYDOMAIN_DOMAIN: n-cc.net
-              UGLYDOMAIN_HOSTEDZONE: Z059167936DYP5QD4B3PQ
-              UGLYDOMAIN_ROLEEXTERNALID: 9a2777d2-757f-4b80-b63c-a698d0826cf9
-              UGLYDOMAIN_ROLEARN: arn:aws:iam::211125614781:role/PublicDomainExternal
 
 access:
   inbound:
@@ -103,8 +101,23 @@ access:
     - identity # not really needed since the container references the identity
 ```
 
+## CLI
+
+The cli to manage Stacks and Blueprints
+
+## Blueprint
+
+A CDK-TF resource that uses special types created by the Environment Toolkit. The example above uses the queue, database and container Blueprints
+
+## Spec
+
+See above for an example. 
+
 ## Class
 
 A way to group resources together to form a common function. The master list of Classes can be found here: {{TBA}}. The list is community driven, and classes are grouped by cloud provider.
 
-In the above example the class is a 'compute' type.
+In the above example the class is a 'compute' type. A compute class has the primary resource of function and container and secondary resources of database, queue and bucket.
+
+## Resource
+
