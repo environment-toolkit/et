@@ -12,7 +12,7 @@ et beacon new <BeaconName>
 
 ## Package a Beacon
 
-Builds and packages the beacon for publishing.
+Builds and packages the beacon for publishing to the `hub`.
 
 ```console
 et beacon build
