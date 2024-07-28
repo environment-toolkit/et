@@ -24,7 +24,8 @@ func (v VersionFlag) BeforeApply(app *kong.Kong, vars kong.Vars) error {
 type Cli struct {
 	Globals
 
-	Get  GetCmd  `cmd:"" help:"Pulls beacons from the server and add to spec"`
+	Init InitCmd `cmd:"" help:"Init a new spec"`
+	Add  AddCmd  `cmd:"" help:"Adds beacon(s) from the hub and to the spec"`
 	Up   UpCmd   `cmd:"" help:"Create infrastructure from spec"`
 	Down DownCmd `cmd:"" help:"Destroy infrastructure from spec"`
 }
