@@ -1,5 +1,5 @@
 class: compute
-code: site
+name: site
 
 data:
   aws:
@@ -33,18 +33,18 @@ service:
           priority: 100
   overrides:
     environments:
-      - environment: prod
+      - name: prod
         data:
           env_vars:
             UGLYDOMAIN_DOMAIN: n-cc.net
 
 resources:
-  - code: events
+  - name: events
     type: queue
     data:
       is_fifo: true
       subscription: events
-  - code: db
+  - name: db
     type: database
     data:
       cluster: database
