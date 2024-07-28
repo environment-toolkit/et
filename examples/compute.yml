@@ -5,20 +5,20 @@ data:
   aws:
     role: arn:aws:iam::211125614781:role/et-deployment
     state:
-        bucket: et-example-prod
-        role: arn:aws:iam::211125614781:role/et-bucket
+      bucket: et-example-prod
+      role: arn:aws:iam::211125614781:role/et-bucket
 
 service:
   type: container
   data:
     cluster: cluster
-    image: {{env:image}}
+    image: {{ env:image }}
     port: 8080
     desired: 2
     cpu: 256
     memory: 512
     secrets:
-      SECURITY_SIGNKEY: {{secret:signkey}}
+      SECURITY_SIGNKEY: {{ secret:signkey }}
     target:
       edge: api
       health:

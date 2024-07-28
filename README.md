@@ -4,18 +4,18 @@
     <img src="images/logo.png" alt="logo" style="width:150px;"/>
 </div>
 
-Environment Toolkit (`et`) is an Infrastructure as Code tool created by Platform Engineers at No_Ops.
+The environment toolkit provides a set of tools for building Infrastructure as Code (IaC) configurations on public cloud providers. It consists of a CLI called `et` to bootstrap, build, publish, and execute `beacons`, which are collections of resources. These `beacons` are indexed and made discoverable through the `hub`.
 
-We bring composition to infrastructure, the community has built a set of Blueprints which can be composed together to build a stack.
+This way, the environment toolkit brings composition to infrastructure, through a set of `beacons` composed together to build a `stack`.
 
 ## Architecture Terms
 
 1. `et` - the cli
-2. Blueprint - CDK-TF modules created by the community and registered in the Environment Toolkit registry
-3. Spec - the spec file which contains a class, code, data and a list of resources
+2. Beacon - CDK-TF modules created by the community and registered in the Environment Toolkit registry
+3. Spec - the spec file which contains a `class`, `code`, `data` and a list of resources
 4. Stack - the output of running a spec with Environment Toolkit
-5. Class - a term we took from CMDB, which helps validate a list of Blueprints
-6. Resource - a Blueprint + Data = a resource
+5. Class - a term we took from CMDB, which helps validate a list of Beacons
+6. Resource - a Beacon + Data = a resource
 7. Primary Resource - Every class has a set of resources that are primary and atleast one of those primary services needs to be defined
 8. Secondary Resource - Every class has a set of resrouces that are secondary, these are resources that support the primary service and are optional
 9. Reference - A reference will connect a resource to an external stack
@@ -24,7 +24,7 @@ We bring composition to infrastructure, the community has built a set of Bluepri
 
 Below is an et.yml file, we'll be using this example to explain how everything works.
 
-```
+```yaml
 class: compute
 code: outfra
 
@@ -32,8 +32,8 @@ data:
   aws:
     role: arn:aws:iam::211125614781:role/et-deployment
     state:
-        bucket: et-example-prod
-        role: arn:aws:iam::211125614781:role/et-bucket
+      bucket: et-example-prod
+      role: arn:aws:iam::211125614781:role/et-bucket
   environment: prod
   region: us-east1
 
@@ -50,7 +50,7 @@ resources:
   - code: outfra
     type: container
     data:
-      image: {{env:image}}
+      image: {{ env:image }}
       port: 8080
       desired: 2
       cpu: 256
@@ -59,19 +59,19 @@ resources:
         SERVICE: bond
         VERSION: v1.0.0
         STREAM_TYPE: apub
-        STREAM_AWS_QUEUENAME: {{this:events:name}}
-        STREAM_AWS_TOPICARN: {{this:events:topic-arn}}
+        STREAM_AWS_QUEUENAME: {{ this:events:name }}
+        STREAM_AWS_TOPICARN: {{ this:events:topic-arn }}
         DATA_TYPE: pg
-        DATA_PG_HOST: {{this:db:host}}
-        DATA_PG_PORT: {{this:db:port}}
-        DATA_PG_DATABASE: {{this:db:name}}
+        DATA_PG_HOST: {{ this:db:host }}
+        DATA_PG_PORT: {{ this:db:port }}
+        DATA_PG_DATABASE: {{ this:db:name }}
         DATA_PG_SSLMODE: require
-        API_IDENTITYURL: {{outbound:identity:url}}
-        API_CONFIGURL: {{outbound:config:url}}
+        API_IDENTITYURL: {{ outbound:identity:url }}
+        API_CONFIGURL: {{ outbound:config:url }}
       secrets:
-        DATA_PG_USERNAME: {{this:db:userpass:username}}
-        DATA_PG_PASSWORD: {{this:db:userpass:password}}
-        SECURITY_SIGNKEY: {{secret:signkey}}
+        DATA_PG_USERNAME: {{ this:db:userpass:username }}
+        DATA_PG_PASSWORD: {{ this:db:userpass:password }}
+        SECURITY_SIGNKEY: {{ secret:signkey }}
       edge:
         edges:
           - edge: api
@@ -111,7 +111,7 @@ A CDK-TF resource that uses special types created by the Environment Toolkit. Th
 
 ## Spec
 
-See above for an example. 
+See above for an example.
 
 ## Class
 
@@ -120,4 +120,3 @@ A way to group resources together to form a common function. The master list of 
 In the above example the class is a 'compute' type. A compute class has the primary resource of function and container and secondary resources of database, queue and bucket.
 
 ## Resource
-
