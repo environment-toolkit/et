@@ -4,9 +4,9 @@
     <img src="images/logo.png" alt="logo" style="width:150px;"/>
 </div>
 
-The environment toolkit provides a set of tools for building Infrastructure as Code (IaC) configurations on public cloud providers. It consists of a CLI called `et` to bootstrap, build, publish, and execute `beacons`, which are collections of resources. These `beacons` are indexed and made discoverable through the `hub`.
+The environment toolkit provides a set of tools for building Infrastructure as Code (IaC) configurations on public cloud providers. It consists of a CLI called `et` to bootstrap, build, publish, and execute `beacons`, which are collections of Provider API Objects. These `beacons` are indexed and made discoverable through the `hub`.
 
-This way, the environment toolkit brings composition to infrastructure, through a set of `beacons` composed together to build a `stack`.
+This way, the environment toolkit brings composition to infrastructure, allowing a set of `beacons` to be composed together to build a `stack` from an application developer native perspective.
 
 ## Architecture Terms
 
