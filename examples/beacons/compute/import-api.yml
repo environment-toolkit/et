@@ -1,17 +1,14 @@
-class: compute
-name: site
+type: container # ContainerBeacon (namespace: compute ~ future view aggregation)
+name: api
 
-data:
-  aws:
-    role: arn:aws:iam::211125614781:role/et-deployment
-    state:
-      bucket: et-example-prod
-      role: arn:aws:iam::211125614781:role/et-bucket
+props:
+  {}
+  # aws: # inherit from environment by default
+  #   role: arn:aws:iam::12345678912:role/et-deployment
 
 service:
-  type: container
-  data:
-    cluster: cluster
+  props:
+    cluster: v1:fargate-cluster
     image: ${{ env:image }}
     port: 8080
     desired: 2
@@ -34,24 +31,24 @@ service:
   overrides:
     environments:
       - name: prod
-        data:
+        props:
           env_vars:
             UGLYDOMAIN_DOMAIN: n-cc.net
 
 resources:
   - name: events
-    type: queue
-    data:
+    type: queue # QueueBeacon (namespace: compute)
+    props:
       is_fifo: true
       subscription: events
   - name: db
-    type: database
-    data:
-      cluster: database
+    type: database # DatabaseBeacon (namespace: compute)
+    props:
+      cluster: pg-cluster
 
 access:
   inbound:
-    - api # not really needed since the edge references the api
+    - site # not really needed since the edge references the api
   outbound:
     - config # not really needed since the container references the config
     - identity # not really needed since the container references the identity

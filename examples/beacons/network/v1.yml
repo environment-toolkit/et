@@ -1,0 +1,22 @@
+type: ipv4-network # Ipv4NetworkBeacon (namespace: network)
+name: v1
+
+service:
+  props:
+    size: large
+    regions:
+      - us-west-2
+      - us-east-1
+      - eu-west-1
+  overrides:
+    environments:
+      - name: dev
+        props:
+          size: small
+          regions: # limit regions
+            - us-east-1
+
+resources:
+  - name: fargate-cluster
+    type: ecs-fargate-cluster # EcsFargateClusterBeacon (namespace: environment)
+    props: {} # TODO: add props

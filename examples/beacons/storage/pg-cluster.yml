@@ -1,0 +1,19 @@
+type: rds-cluster # ContainerBeacon (namespace: compute ~ future view aggregation)
+name: pg-cluster
+
+service:
+  props:
+    engine: aurora-postgresql
+    version: 10.7
+    instance: 1
+    instance-class: db.t3.medium
+    network: ${{ network:v1 }}
+  overrides:
+    environments:
+      - name: prod
+        props:
+          instance-class: db.t3.large
+
+access:
+  inbound:
+    - import-api

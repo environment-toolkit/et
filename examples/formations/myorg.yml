@@ -1,0 +1,25 @@
+formation:
+  name: my-org # working dir for this formation
+  # # override the default working dir
+  # working-dir: ./live/my-org
+  accounts:
+    - name: states
+      props:
+        id: 123456789015
+    - name: nonprod
+      props:
+        id: 123456789012 # generates et-role-arn by convention
+        envs:
+          dev:
+            bucket: et-example-nonprd
+            role: arn:aws:iam::123456789015:role/et-bucket
+          stg:
+            bucket: et-example-nonprd
+            role: arn:aws:iam::123456789015:role/et-bucket
+    - name: prod
+      props:
+        id: 123456789013
+        envs:
+          prd:
+            bucket: et-example-prd
+            role: arn:aws:iam::123456789015:role/et-bucket

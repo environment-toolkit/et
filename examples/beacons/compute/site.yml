@@ -1,0 +1,48 @@
+type: container # ContainerBeacon (namespace: compute ~ future view aggregation)
+name: site
+
+props:
+  cluster: v1:fargate-cluster
+  image: ${{ env:image }}
+  port: 8080
+  desired: 2
+  cpu: 256
+  memory: 512
+  secrets:
+    SECURITY_SIGNKEY: ${{ secret:signkey }}
+  target:
+    edge: api
+    health:
+      path: /live
+      port: 8082
+      timeout: 25
+      interval: 30
+      unhealthy_threshold: 5
+      healthy_threshold: 5
+    rules:
+      - path: /stacks/import
+        priority: 100
+overrides:
+  environments:
+    - name: prod
+      props:
+        env_vars:
+          UGLYDOMAIN_DOMAIN: n-cc.net
+
+resources:
+  - name: events
+    type: queue # QueueBeacon (namespace: compute)
+    props:
+      is_fifo: true
+      subscription: events
+  - name: db
+    type: database # DatabaseBeacon (namespace: compute)
+    props:
+      cluster: pg-cluster
+
+access:
+  inbound:
+    - api # not really needed since the edge references the api
+  outbound:
+    - config # not really needed since the container references the config
+    - identity # not really needed since the container references the identity
