@@ -2,61 +2,45 @@
 
 Proposal of `et` cli features and commands.
 
-## Manage Formations
+## Context
 
-The Environment Toolkit uses a workspace to keep track of the states it manages. Each `et` invocation is within the context of such workspace and referred to as the active `formation`.
+The Environment Toolkit uses the `context` as a workspace to keep track of the states for the `Specs` it manages. Each `et` invocation must be within an "active" `context`. Committing the `context` to git improves reproducibility and collaboration.
 
-> [!NOTE]
-> Formations tie all the states managed by `et` together and are a crucial indexing mechanism.
+A reference to the active context is stored `et`'s default  config (`~/.et/config`).
 
-The metadata tracked about states in a `formation` includes things such as:
+> [!IMPORTANT]
+> The `context` ties all the states managed by `et` together and provides a crucial mechanism for lookups.
 
-- A list of Beacon libraries with their version constraint + their `locks`.
-- A list of references to States provisioned. `et` tracks "revision" information related to each state. <!-- allows propagation of Spec -->
+The metadata tracked about states includes things such as:
 
-Formations are used by the toolkit for cross state lookups, dependency cycle prevention and execution orchestration.
+- The relationship between `Spec` files and their `States` across environments + regions.
+- A list of Beacon libraries with the desired version constraint as well as the actual `lock`'ed version used.
 
-### Activate a Formation
+The `context` is required by the toolkit to allow cross `State` lookups, dependency cycle prevention, state refactoring and execution orchestration.
 
-To change the active formation.
+### Set Current Context
+
+Minimal configuration is required to activate a context such as an initial mapping of environments to Cloud Provider accounts. This information is defined in a `context` manifest. see [examples/contexts/my-org.yml](./examples/contexts/my-org.yml)
 
 ```console
-et formation use ./examples/formations/myorg.yml
+et use ./examples/contexts/my-org.yml
 ```
 
-> Alternatively: use the global CLI `-f/--formation` flag for execution context.
-
-The formation spec provides an initial mapping of environments to Cloud Provider accounts.
+> Alternatively: use the global CLI `-c / --context` flag for executions across multiple contexts.
 
 <!--
-### Bootstrap Formation
+### Bootstrap Context
 
-Provision the necessary Cloud resources for the Environment Toolkit to manage environments in your public cloud provider.
-
-```console
-et formation bootstrap
-```
-
-### Orchestrate Formation
-
-Orchestrate/Refresh a deployment across all states in a formation?
-
-``console
-et formation rollout
-```
-
-### Visualize environments
-
-Export a dotgraph viz of one or more environments and all its states within a formation.
+Provision the conventional Cloud resources for the Environment Toolkit to manage environments within the Cloud Provider.
 
 ```console
-et formation graph [env1,env2]
+et bootstrap ./examples/contexts/my-org.yml
 ```
 -->
 
 ### Register a Beacon library
 
-Make all beacons of a target Beacon library available for `et init` and track the version constraint in the `formation`.
+Add a Beacon library version constraint into the current `context` for reproducibility.
 
 ```console
 et add @envtio/base[@version-constraint]
@@ -65,7 +49,48 @@ et add @envtio/base[@version-constraint]
 >[!NOTE]
 > The version [constraint](https://docs.npmjs.com/about-semantic-versioning#using-semantic-versioning-to-specify-update-types-your-package-can-accept) controls library updates.
 
-<!-- TODO: Future feature of managing private Beacon pkges and credentials to fetch them -->
+<!-- TODO: Future feature of managing private Beacon pkges auth mechanisms and facility the init command for available beacons -->
+
+## Manage State
+
+### Init Spec
+
+Init a spec file for a beacon.
+
+```console
+et init [<library-ref>/]<beacon-type>
+```
+
+Init will automatically add the beacon library to the current `context`.
+
+### Stand up Spec
+
+```console
+et up [-f spec.yml] <environment> <region>
+```
+
+Evaluate and resolve the Spec properties and dependencies across target environment and region within the current `context`.
+
+<!-- CLI will:
+
+- evaluate the spec, resolving resource references through the context
+- unresolved referenced properties halt the process
+- resolved referenced properties are templated out
+- stack synthesis and plan is executed using the Terraform Provider credential chain (i.e assume role arn)
+- on confirmation stack is applied
+
+SaaS offers advanced orchestration mechanisms by overlaying the concept of `formations` over `context`
+
+-->
+
+### Tear Down Spec
+
+>[!IMPORTANT]
+> This is `--dry-run` by default.
+
+```console
+et down [-f spec.yml] <environment> <region> [--no-dry-run]
+```
 
 ## Manage Beacon Libraries
 
@@ -133,42 +158,3 @@ et hub login
 ```
 
 Temporary credentials are stored under `~/.et/auth` by default.
-
-## Manage State
-
-### Init
-
-Init a spec file for a beacon in the available `formation` libraries.
-
-```console
-et init <beacon-type>
-```
-
-<!-- init should prompt through the beacon props -->
-
-### Stand up a Beacon
-
-```console
-et up [-s spec.yml] [environment] [region]
-```
-
-Evaluate and resolve the Spec properties across target environment(s), region(s) and its dependencies within the Formation.
-
-Target `environment`/`region` is optional, when omitted all environments and regions are sequentially targetted.
-
-<!-- CLI will sequentially synth, plan and apply environments/regions, SaaS offers event orchestrated state management? -->
-
-<!-- technical implementation detail: 
-
-Uses the fs to synthesizes the beacon into Terraform IaC with resolved references from the "Formation" (workspace), and apply it using Credential Chain for terraform provider.
-
--->
-
-### Tear Down a Beacon
-
->[!IMPORTANT]
-> This is `--dry-run` by default.
-
-```console
-et down [-s spec.yml] [environment] [region] [--no-dry-run]
-```
