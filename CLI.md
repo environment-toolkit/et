@@ -2,51 +2,51 @@
 
 Proposal of `et` cli features and commands.
 
-## Context
+## Grid
 
-The Environment Toolkit uses the `context` as a workspace to keep track of the states for the `Specs` it manages. Each `et` invocation must be within an "active" `context`. Committing the `context` to git improves reproducibility and collaboration.
+The Environment Toolkit uses the `Grid` as a workspace to keep track of the states for the `Specs` it manages. Each `et` invocation must be within an "active" `grid`. Committing the `grid` to git improves reproducibility and collaboration.
 
-A reference to the active context is stored `et`'s default  config (`~/.et/config`).
+A reference to the active grid is kept in `et`'s default config (`~/.et/config`).
 
 > [!IMPORTANT]
-> The `context` ties all the states managed by `et` together and provides a crucial mechanism for lookups.
+> The `grid` ties all the states managed by `et` together and provides a crucial mechanism for lookups.
 
-The metadata tracked about states includes things such as:
+The metadata tracked about `States` includes things such as:
 
 - The relationship between `Spec` files and their `States` across environments + regions.
 - A list of Beacon libraries with the desired version constraint as well as the actual `lock`'ed version used.
 
-The `context` is required by the toolkit to allow cross `State` lookups, dependency cycle prevention, state refactoring and execution orchestration.
+The `grid` is required by the toolkit to allow cross `State` lookups, dependency cycle prevention, state refactoring and execution orchestration.
 
-### Set Current Context
+### Set Current grid
 
-Minimal configuration is required to activate a context such as an initial mapping of environments to Cloud Provider accounts. This information is defined in a `context` manifest. see [examples/contexts/my-org.yml](./examples/contexts/my-org.yml)
+Minimal configuration is required to activate a grid such as an initial mapping of environments to Cloud Provider accounts. This information is defined in a `grid` manifest. see [examples/grids/my-org.yml](./examples/grids/my-org.yml)
 
 ```console
-et use ./examples/contexts/my-org.yml
+et use ./examples/grids/my-org.yml
 ```
 
-> Alternatively: use the global CLI `-c / --context` flag for executions across multiple contexts.
+> Alternatively: use the global CLI `-g / --grid` flag for executions across multiple grids.
 
 <!--
-### Bootstrap Context
+### Bootstrap grid
 
 Provision the conventional Cloud resources for the Environment Toolkit to manage environments within the Cloud Provider.
 
 ```console
-et bootstrap ./examples/contexts/my-org.yml
+et bootstrap ./examples/grids/my-org.yml
 ```
 -->
 
 ### Register a Beacon library
 
-Add a Beacon library version constraint into the current `context` for reproducibility.
+Add a Beacon library version constraint into the current `grid` for reproducibility.
 
 ```console
 et add @envtio/base[@version-constraint]
 ```
 
->[!NOTE]
+> [!NOTE]
 > The version [constraint](https://docs.npmjs.com/about-semantic-versioning#using-semantic-versioning-to-specify-update-types-your-package-can-accept) controls library updates.
 
 <!-- TODO: Future feature of managing private Beacon pkges auth mechanisms and facility the init command for available beacons -->
@@ -61,7 +61,7 @@ Init a spec file for a beacon.
 et init [<library-ref>/]<beacon-type>
 ```
 
-Init will automatically add the beacon library to the current `context`.
+Init will automatically add the beacon library to the current `grid`.
 
 ### Stand up Spec
 
@@ -69,23 +69,24 @@ Init will automatically add the beacon library to the current `context`.
 et up [-f spec.yml] <environment> <region>
 ```
 
-Evaluate and resolve the Spec properties and dependencies across target environment and region within the current `context`.
+Evaluate and resolve the Spec properties and dependencies across target environment and region within the current `grid`.
 
 <!-- CLI will:
 
-- evaluate the spec, resolving resource references through the context
+- evaluate the spec, resolving resource references through the grid
 - unresolved referenced properties halt the process
 - resolved referenced properties are templated out
 - stack synthesis and plan is executed using the Terraform Provider credential chain (i.e assume role arn)
 - on confirmation stack is applied
+- resulting State is indexed by UUID for env/region (attributes) in the grid and used for future spec resolving.
 
-SaaS offers advanced orchestration mechanisms by overlaying the concept of `formations` over `context`
+SaaS offers advanced orchestration mechanisms over a `grid` of states.
 
 -->
 
 ### Tear Down Spec
 
->[!IMPORTANT]
+> [!IMPORTANT]
 > This is `--dry-run` by default.
 
 ```console

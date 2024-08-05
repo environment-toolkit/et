@@ -4,19 +4,21 @@
     <img src="images/logo.png" alt="logo" style="width:150px;"/>
 </div>
 
-The environment toolkit provides a set of tools for building Infrastructure as Code (IaC) configurations on public cloud providers. It consists of a CLI called `et` to bootstrap, build, publish, and execute `beacons`, which are collections of Cloud Provider Resources. These `beacons` are indexed and made discoverable through the `hub`.
+The environment toolkit provides a set of tools for building Infrastructure as Code (IaC) configurations on public cloud providers.
 
-This way, the environment toolkit brings composition to infrastructure, allowing a set of `beacons` to be composed together.
+It consists of a CLI called `et` to bootstrap, build, publish, and execute `beacons`, which are of Cloud Provider Resources. Libraries of `beacons` are indexed and made discoverable through the `hub`.
+
+This way, the environment toolkit brings composition to infrastructure, allowing a library of `beacons` to be composed together.
 
 ## Architecture Terms
 
 1. `et` - the cli
 1. Hub - the default hub for beacons `hub.envt.io`
 1. Beacon - CDK-TF higher level constructs created by the community and discoverable through the `hub`. <!-- Beacons are namespaced by class and expose composition contracts. -->
-1. Context - A workspace for `et` to track and resolve dependencies between Beacons.
+1. Grid - A workspace for `et` to track and resolve dependencies between Beacons.
 1. Spec - the spec file which contains a Beacon type (`type`), identifier (`name`), Properties (`props`) and may include secondary supporting beacons with their properties.
 1. Class - a term we took from CMDB, which helps validate the specs, their properties and dependencies.
-1. State - the result of running a Spec with Environment Toolkit. All Beacon states are tracked in the execution `context`.
+1. State - the result of running a Spec with Environment Toolkit. All Beacon states are tracked in the execution `grid`.
 1. Resource - each Beacon + Props results in Resources within a State
 1. Reference - A reference will connect Resources across States
 

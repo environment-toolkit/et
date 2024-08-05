@@ -1,0 +1,36 @@
+name: my-org # displayed for `et current-grid`
+# # active grid is stored in ~/.et/config.yml
+# working-dir: ./live/my-org # override the default working dir
+aws:
+  accounts:
+    nonprod:
+      id: 123456789012
+      # role by convention: arn:aws:iam::123456789012:role/et-deployment
+    prod:
+      id: 123456789013
+      # explicit role override
+      role: arn:aws:iam::123456789013:role/devops-role
+  regions:
+    - us-west-2
+    - us-east-1
+    - eu-west-1
+environments:
+  # an ordered list of environments dicates a sequence
+  - name: dev
+    aws:
+      account: nonprod
+      regions: # optionally limit to certain regions
+        - us-east-1
+      state:
+        bucket: et-example-nonprd
+  - name: stg
+    aws:
+      account: nonprod
+      state:
+        bucket: et-example-nonprd
+  - name: prd
+    aws:
+      account: prod
+      state:
+        bucket: et-example-prd # isolated state bucket in separate account
+        role: arn:aws:iam::123456789015:role/et-state-prd
