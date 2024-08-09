@@ -1,9 +1,8 @@
 package main
 
 import (
-	"et/cmds"
-
 	"github.com/alecthomas/kong"
+	"github.com/environment-toolkit/et/cmds"
 )
 
 func main() {

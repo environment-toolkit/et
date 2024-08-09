@@ -1,6 +1,5 @@
-type: @so0k/compute-beacons/container # ContainerBeacon from @so0k/compute-beacons library
 name: import-api
-
+type: "@so0k/compute-beacons/container" # ContainerBeacon from @so0k/compute-beacons library
 props:
   cluster: network-v1/fargate-cluster # fargate-cluster of the v1 network
   image: ${{ env:image }}
@@ -23,11 +22,15 @@ props:
       - path: /stacks/import
         priority: 100
 overrides:
-  environments:
-    - name: prd
-      props:
-        env_vars:
-          UGLYDOMAIN_DOMAIN: n-cc.net
+  - environment: prd
+    region: us-east-1
+    props:
+      env_vars:
+        UGLYDOMAIN_DOMAIN: n-cc.net
+  - environment: prd
+    props:
+      env_vars:
+        UGLYDOMAIN_DOMAIN2: n-cc.net
 
 resources:
   - name: events
