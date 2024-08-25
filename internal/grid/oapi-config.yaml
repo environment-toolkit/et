@@ -1,0 +1,5 @@
+package: grid
+generate:
+  models: true
+  client: true
+output: ./internal/grid/grid.gen.go

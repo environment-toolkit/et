@@ -11,7 +11,7 @@
             "mode": "auto",
             "program": "${workspaceFolder}",
             "env": {},
-            "args": ["up", "-f", "./examples/beacons/compute/import-api.yml"]
+            "args": ["up", "--env", "dev", "--region", "us-east-1", "-f", "./examples/beacons/compute/import-api.yml"]
         }
     ]
 }
