@@ -13,7 +13,7 @@ func Test_It(t *testing.T) {
 
 	pubsub := gochannel.NewGoChannel(gochannel.Config{}, watermill.NopLogger{})
 
-	h, err := NewGrid(ctx, "abc", "./test.db", pubsub)
+	h, err := NewGrid(ctx, "./test.db", pubsub)
 	if err != nil {
 		t.Fatal(err)
 		return

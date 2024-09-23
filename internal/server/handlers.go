@@ -12,7 +12,7 @@ import (
 	"github.com/go-apis/utils/xservice"
 )
 
-func NewGrid(ctx context.Context, signKey string, dbFilename string, pubsub es.MemoryBusPubSub) (http.Handler, error) {
+func NewGrid(ctx context.Context, dbFilename string, pubsub es.MemoryBusPubSub) (http.Handler, error) {
 	v := viper.New()
 	v.Set("service", "grid")
 	v.Set("version", "1.0.0")
@@ -20,7 +20,6 @@ func NewGrid(ctx context.Context, signKey string, dbFilename string, pubsub es.M
 	v.Set("data.sqlite.file", dbFilename)
 	v.Set("stream.type", "mpub")
 	v.Set("stream.memory.topic", "et")
-	v.Set("security.signkey", signKey)
 
 	svc, err := xservice.NewService(ctx, v)
 	if err != nil {

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/go-apis/utils/xes"
 	"github.com/google/uuid"
 	"github.com/motemen/go-loghttp"
 )
@@ -39,12 +38,18 @@ func (m *manager) CommandNewSpec(ctx context.Context, aggregateId uuid.UUID, nam
 	return nil
 }
 
-func NewManager(url string, security xes.Security) (Manager, error) {
+func NewManager(url string, middlewares ...RequestEditorFn) (Manager, error) {
 	cli := &http.Client{
 		Transport: &loghttp.Transport{},
 	}
 
-	client, err := NewClientWithResponses(url, WithHTTPClient(cli), WithRequestEditorFn(security.Intercept))
+	opts := make([]ClientOption, len(middlewares)+1)
+	opts[0] = WithHTTPClient(cli)
+	for i, m := range middlewares {
+		opts[i+1] = WithRequestEditorFn(m)
+	}
+
+	client, err := NewClientWithResponses(url, opts...)
 	if err != nil {
 		return nil, err
 	}
